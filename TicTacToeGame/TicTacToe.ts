@@ -7,6 +7,8 @@ const PLAYER = 0;
 const TOTAL_MOVE = 9;
 
 let boardOfGame: any[][] = [];
+let RandomValue = Math.round(Math.random()) % 2;
+var PLAYER_SYMBOL;
 let i;
 let j;
 
@@ -19,6 +21,21 @@ class TicTacToeGame {
             }
         }
     }
+
+    assignedSymbol = () => {
+        if (RandomValue == 1) {
+            PLAYER_SYMBOL = "X";
+        }
+        else {
+            PLAYER_SYMBOL = "O";
+        }
+
+        console.log("Assigned Player Symbol : " + PLAYER_SYMBOL);
+       
+    }
+
 }
 
 new TicTacToeGame().resettingBoard();
+new TicTacToeGame().assignedSymbol();
+
