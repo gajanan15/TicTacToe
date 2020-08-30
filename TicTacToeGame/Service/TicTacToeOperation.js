@@ -20,6 +20,7 @@ var checkFlag1;
 let counter = 0;
 let checkCount;
 let newLetterCount;
+let tieCount = 0;
 var row;
 var col;
 let i;
@@ -72,7 +73,7 @@ class TicTacToeOperations {
                     console.log("Player Play");
                     row = readlineSync.question('Enter Player Row');
                     col = readlineSync.question('Enter Player Col');
-                    if (row >= ROWS && col >= COLUMNS) {
+                    if (row >= ROWS || col >= COLUMNS) {
                         console.log("Invalid");
                     }
                     else if (boardOfGame[row][col] != PLAYER_SYMBOL) {
@@ -88,7 +89,12 @@ class TicTacToeOperations {
                 else if (flag == 1) {
                     checkFlag = 0;
                     console.log("Computer Play");
-                    this.computerWinningBoard(COMPUTER_SYMBOL, COMPUTER_SYMBOL);
+                    if (checkFlag == 0) {
+                        this.computerWinningBoard(COMPUTER_SYMBOL, COMPUTER_SYMBOL);
+                    }
+                    if (checkFlag == 0) {
+                        this.computerWinningBoard(PLAYER_SYMBOL, COMPUTER_SYMBOL);
+                    }
                     this.checkForWin(COMPUTER_SYMBOL);
                     counter++;
                     flag = 0;
@@ -101,10 +107,10 @@ class TicTacToeOperations {
             checkFlag = 0;
             checkFlag1 = 0;
             if (checkFlag1 == 0) {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < ROWS; i++) {
                     checkCount = 0;
                     newLetterCount = 0;
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 0; j < COLUMNS; j++) {
                         this.computerWinChecking(i, j, checkLetter);
                     }
                     if (checkCount == 2 && newLetterCount == 1) {
@@ -115,10 +121,10 @@ class TicTacToeOperations {
                 }
             }
             if (checkFlag1 == 0) {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < ROWS; i++) {
                     checkCount = 0;
                     newLetterCount = 0;
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 0; j < COLUMNS; j++) {
                         this.computerWinChecking(j, i, checkLetter);
                     }
                     if (checkCount == 2 && newLetterCount == 1) {
@@ -131,8 +137,8 @@ class TicTacToeOperations {
             if (checkFlag1 == 0) {
                 checkCount = 0;
                 newLetterCount = 0;
-                for (let i = 0; i < 3; i++) {
-                    for (let j = 0; j < 3; j++) {
+                for (let i = 0; i < ROWS; i++) {
+                    for (let j = 0; j < COLUMNS; j++) {
                         if (i == j) {
                             this.computerWinChecking(i, j, checkLetter);
                         }
@@ -181,12 +187,17 @@ class TicTacToeOperations {
             }
         };
         this.checkForWin = (symbol) => {
+            tieCount++;
             this.displayGameBoard();
             this.winAtRowPosition(symbol);
-            this.winAtDia(symbol);
+            this.winAtColPosition(symbol);
+            this.winAtDiagonal(symbol);
+            if (tieCount > 8) {
+                console.log("It's a Tie");
+                process_1.exit();
+            }
         };
         this.winAtRowPosition = (symbol) => {
-            console.log("Row: " + symbol);
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLUMNS; c++) {
                     if (boardOfGame[r][c] == boardOfGame[r][c + 1] && boardOfGame[r][c + 1] == boardOfGame[r][c + 2] && boardOfGame[r][c] == symbol) {
@@ -196,16 +207,17 @@ class TicTacToeOperations {
             }
         };
         this.winAtColPosition = (symbol) => {
-            console.log("Col: " + symbol);
-            for (let r = 0; r < ROWS; r++) {
-                for (let c = 0; c < COLUMNS; c++) {
-                    if (boardOfGame[r][c] == boardOfGame[r + 1][c] && boardOfGame[r + 1][c] == boardOfGame[r + 2][c] && boardOfGame[r][c] == symbol) {
-                        this.playerOrComputerWon(symbol);
-                    }
-                }
+            if (boardOfGame[0][0] == boardOfGame[1][0] && boardOfGame[1][0] == boardOfGame[2][0] && boardOfGame[0][0] == symbol) {
+                this.playerOrComputerWon(symbol);
+            }
+            else if (boardOfGame[0][1] == boardOfGame[1][1] && boardOfGame[1][1] == boardOfGame[2][1] && boardOfGame[0][1] == symbol) {
+                this.playerOrComputerWon(symbol);
+            }
+            else if (boardOfGame[0][2] == boardOfGame[1][2] && boardOfGame[1][2] == boardOfGame[2][2] && boardOfGame[0][2] == symbol) {
+                this.playerOrComputerWon(symbol);
             }
         };
-        this.winAtDia = (symbol) => {
+        this.winAtDiagonal = (symbol) => {
             if ((boardOfGame[0][0] == boardOfGame[1][1]) && (boardOfGame[1][1] == boardOfGame[2][2]) && boardOfGame[0][0] == symbol) {
                 this.playerOrComputerWon(symbol);
             }
