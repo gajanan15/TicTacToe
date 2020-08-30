@@ -44,9 +44,22 @@ class TicTacToeGame {
         }
     }
 
+    displayGameBoard = () => {
+        console.log("===============");
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLUMNS; j++) {
+                process.stdout.write('| ' + boardOfGame[i][j] + ' |');
+            }
+            console.log();
+            console.log("===============");
+        }
+    }
+
 }
 
 new TicTacToeGame().resettingBoard();
 new TicTacToeGame().assignedSymbol();
 new TicTacToeGame().whoWillPlayFirst();
+new TicTacToeGame().displayGameBoard();
+
 
