@@ -22,7 +22,6 @@ let counter = 0;
 let checkCount;
 let newLetterCount;
 let tieCount = 0;
-var putLetter;
 var row;
 var col;
 let i;
@@ -97,15 +96,17 @@ export class TicTacToeOperations {
                 checkFlag = 0;
                 console.log("Computer Play");
                 if (checkFlag == 0) {
-                    this.computerWinningBoard(COMPUTER_SYMBOL, COMPUTER_SYMBOL);
+                    this.computerWinningBoard(COMPUTER_SYMBOL);
                 }
                 if (checkFlag == 0) {
-                    this.computerWinningBoard(PLAYER_SYMBOL, COMPUTER_SYMBOL);
+                    this.computerWinningBoard(PLAYER_SYMBOL);
                 }
                 if (checkFlag == 0) {
-                    this.takingCornerPosition(COMPUTER_SYMBOL)
+                    this.takingCornerPosition()
                 }
-
+                if (checkFlag == 0) {
+                    this.takingCenterPosition();
+                }
                 this.checkForWin(COMPUTER_SYMBOL);
                 counter++;
                 flag = 0;
@@ -117,7 +118,7 @@ export class TicTacToeOperations {
         tieCount++;
         this.displayGameBoard();
         this.winAtRowPosition(symbol);
-        //this.winAtColPosition(symbol);
+        this.winAtColPosition(symbol);
         this.winAtDiagonalPosition(symbol);
         if (tieCount > 8) {
             console.log("It's a Tie");
@@ -140,17 +141,16 @@ export class TicTacToeOperations {
         newLetterCount = 0;
     }
 
-    checkCounterAndChangeFlagValue = (r, c, letter) => {
+    checkCounterAndChangeFlagValue = (r, c) => {
         if (checkCount == 2 && newLetterCount == 1) {
-            boardOfGame[r][c] = letter;
+            boardOfGame[r][c] = COMPUTER_SYMBOL;
             checkFlag1 = 1;
             checkFlag = 1;
         }
     }
 
-    computerWinningBoard = (symbol1, symbol2) => {
-        var checkLetter = symbol1;
-        putLetter = symbol2;
+    computerWinningBoard = (symbol1) => {
+        var checkSymbol = symbol1;
         checkFlag = 0;
         checkFlag1 = 0;
 
@@ -160,9 +160,9 @@ export class TicTacToeOperations {
                 this.reassignCounter();
 
                 for (let j = 0; j < COLUMNS; j++) {
-                    this.computerWinChecking(i, j, checkLetter);
+                    this.computerWinChecking(i, j, checkSymbol);
                 }
-                this.checkCounterAndChangeFlagValue(row, col, putLetter);
+                this.checkCounterAndChangeFlagValue(row, col);
             }
         }
 
@@ -170,9 +170,9 @@ export class TicTacToeOperations {
             for (let i = 0; i < ROWS; i++) {
                 this.reassignCounter();
                 for (let j = 0; j < COLUMNS; j++) {
-                    this.computerWinChecking(j, i, checkLetter);
+                    this.computerWinChecking(j, i, checkSymbol);
                 }
-                this.checkCounterAndChangeFlagValue(row, col, putLetter);
+                this.checkCounterAndChangeFlagValue(row, col);
             }
         }
 
@@ -181,11 +181,11 @@ export class TicTacToeOperations {
             for (let i = 0; i < ROWS; i++) {
                 for (let j = 0; j < COLUMNS; j++) {
                     if (i == j) {
-                        this.computerWinChecking(i, j, checkLetter);
+                        this.computerWinChecking(i, j, checkSymbol);
                     }
                 }
             }
-            this.checkCounterAndChangeFlagValue(row, col, putLetter);
+            this.checkCounterAndChangeFlagValue(row, col);
         }
 
         //diagonal right to left
@@ -193,24 +193,36 @@ export class TicTacToeOperations {
             this.reassignCounter();
             for (let i = 0; i < 3; i++) {
                 for (let j = (2 - i); j < 3; j++) {
-                    this.computerWinChecking(i, j, checkLetter);
+                    this.computerWinChecking(i, j, checkSymbol);
                     break;
                 }
             }
-            this.checkCounterAndChangeFlagValue(row, col, putLetter);
+            this.checkCounterAndChangeFlagValue(row, col);
         }
     }
 
-    takingCornerPosition = (symbol) => {
+    takingCornerPosition = () => {
         checkFlag = 0;
         for (let i = 0; i < ROWS; i = (i + 2)) {
             for (let j = 0; j < COLUMNS; j = (j + 2)) {
                 if (boardOfGame[i][j] == "-") {
-                    boardOfGame[i][j] = symbol;
+                    boardOfGame[i][j] = COMPUTER_SYMBOL;
                     checkFlag = 1;
                     return;
                 }
             }
+        }
+    }
+
+    //Check Center Position
+    takingCenterPosition = () => {
+        checkFlag = 0;
+        let row = Math.floor(ROWS / 2);
+        let col = Math.floor(COLUMNS / 2);
+        if (boardOfGame[row][col] == "-") {
+            boardOfGame[row][col] = COMPUTER_SYMBOL;
+        } else {
+            checkFlag = 1;
         }
     }
 
