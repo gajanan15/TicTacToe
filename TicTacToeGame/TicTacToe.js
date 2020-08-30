@@ -27,8 +27,17 @@ class TicTacToeGame {
             }
             console.log("Assigned Player Symbol : " + PLAYER_SYMBOL);
         };
+        this.whoWillPlayFirst = () => {
+            if (RandomValue == PLAYER) {
+                console.log("Player Play First");
+            }
+            else {
+                console.log("Computer Paly First");
+            }
+        };
     }
 }
 new TicTacToeGame().resettingBoard();
 new TicTacToeGame().assignedSymbol();
+new TicTacToeGame().whoWillPlayFirst();
 //# sourceMappingURL=TicTacToe.js.map
