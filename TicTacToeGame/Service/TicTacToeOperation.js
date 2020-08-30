@@ -7,7 +7,7 @@ var readlineSync = require('readline-sync');
 const ROWS = 3;
 const COLUMNS = 3;
 const PLAYER = 0;
-const TOTAL_MOVE = 9;
+const TOTAL_MOVE = (ROWS * COLUMNS);
 //Declare Array
 let boardOfGame = [];
 //Variables
@@ -27,6 +27,7 @@ let i;
 let j;
 class TicTacToeOperations {
     constructor() {
+        //Resetting Board
         this.resettingBoard = () => {
             for (i = 0; i < ROWS; i++) {
                 boardOfGame[i] = [];
@@ -35,6 +36,7 @@ class TicTacToeOperations {
                 }
             }
         };
+        //For Assigning Symbol
         this.assignedSymbol = () => {
             if (RandomValue == 1) {
                 PLAYER_SYMBOL = "X";
@@ -47,6 +49,7 @@ class TicTacToeOperations {
             console.log("Assigned Player Symbol : " + PLAYER_SYMBOL);
             console.log("Assigned Computer Symbol : " + COMPUTER_SYMBOL);
         };
+        //Function For Knowing Who Will Play First
         this.whoWillPlayFirst = () => {
             if (RandomValue == PLAYER) {
                 flag = 0;
@@ -57,6 +60,7 @@ class TicTacToeOperations {
                 console.log("Computer Paly First");
             }
         };
+        //Function For Display Game Board
         this.displayGameBoard = () => {
             console.log("===============");
             for (let i = 0; i < ROWS; i++) {
@@ -67,60 +71,71 @@ class TicTacToeOperations {
                 console.log("===============");
             }
         };
-        this.playGame = () => {
-            while (counter < TOTAL_MOVE) {
-                if (flag == 0) {
-                    console.log("Player Play");
-                    row = readlineSync.question('Enter Player Row : ');
-                    col = readlineSync.question('Enter Player Col : ');
-                    if (row >= ROWS || col >= COLUMNS) {
-                        console.log("Invalid");
-                    }
-                    else if (boardOfGame[row][col] != PLAYER_SYMBOL && boardOfGame[row][col] != COMPUTER_SYMBOL) {
-                        boardOfGame[row][col] = PLAYER_SYMBOL;
-                        this.checkForWin(PLAYER_SYMBOL);
-                        counter++;
-                        flag = 1;
-                    }
-                    else {
-                        console.log("Cell Is Not Empty");
-                    }
+        //For Player Turn
+        this.PlayerTurn = () => {
+            if (flag == 0) {
+                console.log("Player Play");
+                row = readlineSync.question('Enter Player Row : ');
+                col = readlineSync.question('Enter Player Col : ');
+                if (row >= ROWS || col >= COLUMNS) {
+                    console.log("Invalid");
                 }
-                else if (flag == 1) {
-                    checkFlag = 0;
-                    console.log("Computer Play");
-                    if (checkFlag == 0) {
-                        this.computerWinningBoard(COMPUTER_SYMBOL);
-                    }
-                    if (checkFlag == 0) {
-                        this.computerWinningBoard(PLAYER_SYMBOL);
-                    }
-                    if (checkFlag == 0) {
-                        this.takingCornerPosition();
-                    }
-                    if (checkFlag == 0) {
-                        this.takingCenterPosition();
-                    }
-                    if (checkFlag == 0) {
-                        this.takingSidePosition();
-                    }
-                    this.checkForWin(COMPUTER_SYMBOL);
+                else if (boardOfGame[row][col] != PLAYER_SYMBOL && boardOfGame[row][col] != COMPUTER_SYMBOL) {
+                    boardOfGame[row][col] = PLAYER_SYMBOL;
+                    this.checkForWin(PLAYER_SYMBOL);
                     counter++;
-                    flag = 0;
+                    flag = 1;
+                }
+                else {
+                    console.log("Cell Is Not Empty");
                 }
             }
         };
+        //For Computer Turn
+        this.ComputerTurn = () => {
+            if (flag == 1) {
+                checkFlag = 0;
+                console.log("Computer Play");
+                if (checkFlag == 0) {
+                    this.computerWinningBoard(COMPUTER_SYMBOL);
+                }
+                if (checkFlag == 0) {
+                    this.computerWinningBoard(PLAYER_SYMBOL);
+                }
+                if (checkFlag == 0) {
+                    this.takingCornerPosition();
+                }
+                if (checkFlag == 0) {
+                    this.takingCenterPosition();
+                }
+                if (checkFlag == 0) {
+                    this.takingSidePosition();
+                }
+                this.checkForWin(COMPUTER_SYMBOL);
+                counter++;
+                flag = 0;
+            }
+        };
+        //Game Start
+        this.playGame = () => {
+            while (counter < TOTAL_MOVE) {
+                this.PlayerTurn();
+                this.ComputerTurn();
+            }
+        };
+        //Function For Checking Whether Computer Or Player Can Won Or it's Tie
         this.checkForWin = (symbol) => {
             tieCount++;
             this.displayGameBoard();
             this.winAtRowPosition(symbol);
-            this.winAtColPosition(symbol);
+            this.winAtColumnPosition(symbol);
             this.winAtDiagonalPosition(symbol);
             if (tieCount > 8) {
                 console.log("It's a Tie");
                 process_1.exit();
             }
         };
+        //Function For Computer Win Checking
         this.computerWinChecking = (r, c, symbol) => {
             if (boardOfGame[r][c] == symbol) {
                 checkCount++;
@@ -131,10 +146,12 @@ class TicTacToeOperations {
                 col = c;
             }
         };
+        //Reset Counter
         this.reassignCounter = () => {
             checkCount = 0;
             newLetterCount = 0;
         };
+        //Check Counter And Change Falg Value
         this.checkCounterAndChangeFlagValue = (r, c) => {
             if (checkCount == 2 && newLetterCount == 1) {
                 boardOfGame[r][c] = COMPUTER_SYMBOL;
@@ -225,6 +242,7 @@ class TicTacToeOperations {
                 }
             }
         };
+        //Check Player Or Computer Won
         this.playerOrComputerWon = (sysmbol) => {
             if (sysmbol == PLAYER_SYMBOL) {
                 console.log("Player Won");
@@ -234,6 +252,7 @@ class TicTacToeOperations {
             }
             process_1.exit();
         };
+        //Check Winning Condtion for Row
         this.winAtRowPosition = (symbol) => {
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLUMNS; c++) {
@@ -243,7 +262,8 @@ class TicTacToeOperations {
                 }
             }
         };
-        this.winAtColPosition = (symbol) => {
+        //Check Winning Condtion for Column
+        this.winAtColumnPosition = (symbol) => {
             if (boardOfGame[0][0] == boardOfGame[1][0] && boardOfGame[1][0] == boardOfGame[2][0] && boardOfGame[0][0] == symbol) {
                 this.playerOrComputerWon(symbol);
             }
@@ -254,6 +274,7 @@ class TicTacToeOperations {
                 this.playerOrComputerWon(symbol);
             }
         };
+        //Check Winning Condition Of Diagonal
         this.winAtDiagonalPosition = (symbol) => {
             if ((boardOfGame[0][0] == boardOfGame[1][1]) && (boardOfGame[1][1] == boardOfGame[2][2]) && boardOfGame[0][0] == symbol) {
                 this.playerOrComputerWon(symbol);
