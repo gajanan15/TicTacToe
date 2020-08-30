@@ -107,6 +107,9 @@ export class TicTacToeOperations {
                 if (checkFlag == 0) {
                     this.takingCenterPosition();
                 }
+                if (checkFlag == 0) {
+                    this.takingSidePosition();
+                }
                 this.checkForWin(COMPUTER_SYMBOL);
                 counter++;
                 flag = 0;
@@ -201,6 +204,7 @@ export class TicTacToeOperations {
         }
     }
 
+    //Check Corner Position
     takingCornerPosition = () => {
         checkFlag = 0;
         for (let i = 0; i < ROWS; i = (i + 2)) {
@@ -221,8 +225,23 @@ export class TicTacToeOperations {
         let col = Math.floor(COLUMNS / 2);
         if (boardOfGame[row][col] == "-") {
             boardOfGame[row][col] = COMPUTER_SYMBOL;
-        } else {
             checkFlag = 1;
+        }
+    }
+
+    //check Side Position
+    takingSidePosition = () => {
+        checkFlag = 0;
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 1; j < COLUMNS; j++) {
+                if (boardOfGame[i][j] == "-") {
+                    boardOfGame[i][j] = COMPUTER_SYMBOL;
+                    checkFlag = 1;
+                }
+                if (checkFlag == 1) {
+                    break;
+                }
+            }
         }
     }
 
